@@ -1,0 +1,69 @@
+version: "3"
+
+services:
+  yokai_server_game:
+    image: hellodudu86/yokai_server_game
+    container_name: yokai_server_game
+    command: "-config_file=../../config/game/config.toml"
+    restart: unless-stopped
+    ports:
+      - "7030:7030"
+    volumes:
+      - "./config/game/:/app/config/game"
+      - "./data/entry/:/app/data/entry"
+    environment:
+      MICRO_SERVER_ID: 1001
+      #MICRO_REGISTRY: "consul"
+      #MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"
+      #MICRO_BROKER: "nsq"
+      #MICRO_BROKER_ADDRESS: "host.docker.internal:4150"
+    depends_on:
+       - "mysql"
+      #- "consul"
+      #- "nsqd"
+      #- "loki"
+    #logging:
+      #driver: loki
+      #options:
+        #loki-url: http://host.docker.internal:3100/api/prom/push
+        #loki-retries: "5"
+        #loki-batch-size: "400"
+        
+  yokai_server_battle:
+    image: hellodudu86/yokai_server_battle
+    container_name: yokai_server_battle
+    command: "-config_file=../../config/battle/config.toml"
+    restart: unless-stopped
+    volumes:
+      - "./config/battle/:/app/config/battle"
+      - "./data/entry/:/app/data/entry"
+    environment:
+      MICRO_SERVER_ID: 2001
+      #MICRO_REGISTRY: "consul"
+      #MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"
+      #MICRO_BROKER: "nsq"
+      #MICRO_BROKER_ADDRESS: "host.docker.internal:4150"
+    depends_on:
+       - "mysql"
+      #- "consul"
+      #- "nsqd"
+      #- "loki"
+    #logging:
+      #driver: loki
+      #options:
+        #loki-url: http://host.docker.internal:3100/api/prom/push
+        #loki-retries: "5"
+        #loki-batch-size: "400"
+        
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      MYSQL_USER: 'root'
+      MYSQL_ROOT_PASSWORD: "123456"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/database/:/var/lib/mysql
+      - ./backup/:/backup
+      #- ./config/sql/dump.sql:/docker-entrypoint-initdb.d/dump.sql

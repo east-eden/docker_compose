@@ -1,0 +1,35 @@
+syntax = "proto3";
+package yokai_game;
+
+option go_package = "github.com/yokaiio/yokai_server/proto/game";
+
+
+////////////////////////////////////////////////
+// Hero
+message Hero {
+    int64 id = 1;
+    int32 type_id = 2;
+    int64 exp = 3;
+    int32 level = 4;
+}
+
+message MC_AddHero {
+    int32 type_id = 1;
+}
+
+message MC_DelHero {
+    int64 id = 1;
+}
+
+message MC_QueryHeros {
+
+}
+
+message MS_HeroList {
+    repeated Hero heros = 1;
+}
+
+message MS_HeroInfo {
+    Hero info = 1;
+}
+

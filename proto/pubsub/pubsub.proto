@@ -3,17 +3,26 @@ package yokai_pubsub;
 
 option go_package = "github.com/yokaiio/yokai_server/proto/pubsub";
 
-import "client/client.proto";
+import "account/account.proto";
 
 /////////////////////////////////////////////////
 // pub/sub
 /////////////////////////////////////////////////
-message PubStartBattle {
-    yokai_client.ClientInfo info = 1;
+message PubStartGate {
+    yokai_account.LiteAccount info = 1;
 }
 
-message PubBattleResult {
-    yokai_client.ClientInfo info = 1;
+message PubGateResult {
+    yokai_account.LiteAccount info = 1;
     bool win = 2;
 }
 
+message PubExpirePlayer {
+    int64 player_id = 1;
+    int32 game_id = 2;
+}
+
+message PubExpireLitePlayer {
+    int64 player_id = 1;
+    int32 game_id = 2;
+}

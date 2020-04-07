@@ -1,0 +1,17 @@
+# config.toml
+
+title = "yokai_gate_config"
+
+# ip and port
+gate_id = 2001
+http_listen_addr = ":8080"
+default_game_id = "1001"
+
+# db
+db_dsn = "mongodb://localhost:27017"
+database = "db_gate"
+
+# gate evironment
+registry = "consul"
+transport = "tcp"
+broker = "nsq"

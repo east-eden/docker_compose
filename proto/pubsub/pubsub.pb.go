@@ -6,7 +6,7 @@ package pubsub
 import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	client "github.com/yokaiio/yokai_server/proto/client"
+	account "github.com/yokaiio/yokai_server/proto/account"
 	math "math"
 )
 
@@ -24,111 +24,211 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 /////////////////////////////////////////////////
 // pub/sub
 /////////////////////////////////////////////////
-type PubStartBattle struct {
-	Info                 *client.ClientInfo `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
-	XXX_unrecognized     []byte             `json:"-"`
-	XXX_sizecache        int32              `json:"-"`
+type PubStartGate struct {
+	Info                 *account.LiteAccount `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *PubStartBattle) Reset()         { *m = PubStartBattle{} }
-func (m *PubStartBattle) String() string { return proto.CompactTextString(m) }
-func (*PubStartBattle) ProtoMessage()    {}
-func (*PubStartBattle) Descriptor() ([]byte, []int) {
+func (m *PubStartGate) Reset()         { *m = PubStartGate{} }
+func (m *PubStartGate) String() string { return proto.CompactTextString(m) }
+func (*PubStartGate) ProtoMessage()    {}
+func (*PubStartGate) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ce310d0bb9f289ed, []int{0}
 }
 
-func (m *PubStartBattle) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PubStartBattle.Unmarshal(m, b)
+func (m *PubStartGate) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PubStartGate.Unmarshal(m, b)
 }
-func (m *PubStartBattle) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PubStartBattle.Marshal(b, m, deterministic)
+func (m *PubStartGate) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PubStartGate.Marshal(b, m, deterministic)
 }
-func (m *PubStartBattle) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PubStartBattle.Merge(m, src)
+func (m *PubStartGate) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PubStartGate.Merge(m, src)
 }
-func (m *PubStartBattle) XXX_Size() int {
-	return xxx_messageInfo_PubStartBattle.Size(m)
+func (m *PubStartGate) XXX_Size() int {
+	return xxx_messageInfo_PubStartGate.Size(m)
 }
-func (m *PubStartBattle) XXX_DiscardUnknown() {
-	xxx_messageInfo_PubStartBattle.DiscardUnknown(m)
+func (m *PubStartGate) XXX_DiscardUnknown() {
+	xxx_messageInfo_PubStartGate.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PubStartBattle proto.InternalMessageInfo
+var xxx_messageInfo_PubStartGate proto.InternalMessageInfo
 
-func (m *PubStartBattle) GetInfo() *client.ClientInfo {
+func (m *PubStartGate) GetInfo() *account.LiteAccount {
 	if m != nil {
 		return m.Info
 	}
 	return nil
 }
 
-type PubBattleResult struct {
-	Info                 *client.ClientInfo `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
-	Win                  bool               `protobuf:"varint,2,opt,name=win,proto3" json:"win,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
-	XXX_unrecognized     []byte             `json:"-"`
-	XXX_sizecache        int32              `json:"-"`
+type PubGateResult struct {
+	Info                 *account.LiteAccount `protobuf:"bytes,1,opt,name=info,proto3" json:"info,omitempty"`
+	Win                  bool                 `protobuf:"varint,2,opt,name=win,proto3" json:"win,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *PubBattleResult) Reset()         { *m = PubBattleResult{} }
-func (m *PubBattleResult) String() string { return proto.CompactTextString(m) }
-func (*PubBattleResult) ProtoMessage()    {}
-func (*PubBattleResult) Descriptor() ([]byte, []int) {
+func (m *PubGateResult) Reset()         { *m = PubGateResult{} }
+func (m *PubGateResult) String() string { return proto.CompactTextString(m) }
+func (*PubGateResult) ProtoMessage()    {}
+func (*PubGateResult) Descriptor() ([]byte, []int) {
 	return fileDescriptor_ce310d0bb9f289ed, []int{1}
 }
 
-func (m *PubBattleResult) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PubBattleResult.Unmarshal(m, b)
+func (m *PubGateResult) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PubGateResult.Unmarshal(m, b)
 }
-func (m *PubBattleResult) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PubBattleResult.Marshal(b, m, deterministic)
+func (m *PubGateResult) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PubGateResult.Marshal(b, m, deterministic)
 }
-func (m *PubBattleResult) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PubBattleResult.Merge(m, src)
+func (m *PubGateResult) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PubGateResult.Merge(m, src)
 }
-func (m *PubBattleResult) XXX_Size() int {
-	return xxx_messageInfo_PubBattleResult.Size(m)
+func (m *PubGateResult) XXX_Size() int {
+	return xxx_messageInfo_PubGateResult.Size(m)
 }
-func (m *PubBattleResult) XXX_DiscardUnknown() {
-	xxx_messageInfo_PubBattleResult.DiscardUnknown(m)
+func (m *PubGateResult) XXX_DiscardUnknown() {
+	xxx_messageInfo_PubGateResult.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PubBattleResult proto.InternalMessageInfo
+var xxx_messageInfo_PubGateResult proto.InternalMessageInfo
 
-func (m *PubBattleResult) GetInfo() *client.ClientInfo {
+func (m *PubGateResult) GetInfo() *account.LiteAccount {
 	if m != nil {
 		return m.Info
 	}
 	return nil
 }
 
-func (m *PubBattleResult) GetWin() bool {
+func (m *PubGateResult) GetWin() bool {
 	if m != nil {
 		return m.Win
 	}
 	return false
 }
 
+type PubExpirePlayer struct {
+	PlayerId             int64    `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
+	GameId               int32    `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PubExpirePlayer) Reset()         { *m = PubExpirePlayer{} }
+func (m *PubExpirePlayer) String() string { return proto.CompactTextString(m) }
+func (*PubExpirePlayer) ProtoMessage()    {}
+func (*PubExpirePlayer) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ce310d0bb9f289ed, []int{2}
+}
+
+func (m *PubExpirePlayer) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PubExpirePlayer.Unmarshal(m, b)
+}
+func (m *PubExpirePlayer) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PubExpirePlayer.Marshal(b, m, deterministic)
+}
+func (m *PubExpirePlayer) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PubExpirePlayer.Merge(m, src)
+}
+func (m *PubExpirePlayer) XXX_Size() int {
+	return xxx_messageInfo_PubExpirePlayer.Size(m)
+}
+func (m *PubExpirePlayer) XXX_DiscardUnknown() {
+	xxx_messageInfo_PubExpirePlayer.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PubExpirePlayer proto.InternalMessageInfo
+
+func (m *PubExpirePlayer) GetPlayerId() int64 {
+	if m != nil {
+		return m.PlayerId
+	}
+	return 0
+}
+
+func (m *PubExpirePlayer) GetGameId() int32 {
+	if m != nil {
+		return m.GameId
+	}
+	return 0
+}
+
+type PubExpireLitePlayer struct {
+	PlayerId             int64    `protobuf:"varint,1,opt,name=player_id,json=playerId,proto3" json:"player_id,omitempty"`
+	GameId               int32    `protobuf:"varint,2,opt,name=game_id,json=gameId,proto3" json:"game_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *PubExpireLitePlayer) Reset()         { *m = PubExpireLitePlayer{} }
+func (m *PubExpireLitePlayer) String() string { return proto.CompactTextString(m) }
+func (*PubExpireLitePlayer) ProtoMessage()    {}
+func (*PubExpireLitePlayer) Descriptor() ([]byte, []int) {
+	return fileDescriptor_ce310d0bb9f289ed, []int{3}
+}
+
+func (m *PubExpireLitePlayer) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PubExpireLitePlayer.Unmarshal(m, b)
+}
+func (m *PubExpireLitePlayer) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PubExpireLitePlayer.Marshal(b, m, deterministic)
+}
+func (m *PubExpireLitePlayer) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PubExpireLitePlayer.Merge(m, src)
+}
+func (m *PubExpireLitePlayer) XXX_Size() int {
+	return xxx_messageInfo_PubExpireLitePlayer.Size(m)
+}
+func (m *PubExpireLitePlayer) XXX_DiscardUnknown() {
+	xxx_messageInfo_PubExpireLitePlayer.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PubExpireLitePlayer proto.InternalMessageInfo
+
+func (m *PubExpireLitePlayer) GetPlayerId() int64 {
+	if m != nil {
+		return m.PlayerId
+	}
+	return 0
+}
+
+func (m *PubExpireLitePlayer) GetGameId() int32 {
+	if m != nil {
+		return m.GameId
+	}
+	return 0
+}
+
 func init() {
-	proto.RegisterType((*PubStartBattle)(nil), "yokai_pubsub.PubStartBattle")
-	proto.RegisterType((*PubBattleResult)(nil), "yokai_pubsub.PubBattleResult")
+	proto.RegisterType((*PubStartGate)(nil), "yokai_pubsub.PubStartGate")
+	proto.RegisterType((*PubGateResult)(nil), "yokai_pubsub.PubGateResult")
+	proto.RegisterType((*PubExpirePlayer)(nil), "yokai_pubsub.PubExpirePlayer")
+	proto.RegisterType((*PubExpireLitePlayer)(nil), "yokai_pubsub.PubExpireLitePlayer")
 }
 
 func init() { proto.RegisterFile("pubsub/pubsub.proto", fileDescriptor_ce310d0bb9f289ed) }
 
 var fileDescriptor_ce310d0bb9f289ed = []byte{
-	// 183 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x2e, 0x28, 0x4d, 0x2a,
-	0x2e, 0x4d, 0xd2, 0x87, 0x50, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0x3c, 0x95, 0xf9, 0xd9,
-	0x89, 0x99, 0xf1, 0x10, 0x31, 0x29, 0xe1, 0xe4, 0x9c, 0xcc, 0xd4, 0xbc, 0x12, 0x7d, 0x08, 0x05,
-	0x51, 0xa2, 0x64, 0xc7, 0xc5, 0x17, 0x50, 0x9a, 0x14, 0x5c, 0x92, 0x58, 0x54, 0xe2, 0x94, 0x58,
-	0x52, 0x92, 0x93, 0x2a, 0xa4, 0xc3, 0xc5, 0x92, 0x99, 0x97, 0x96, 0x2f, 0xc1, 0xa8, 0xc0, 0xa8,
-	0xc1, 0x6d, 0x24, 0xa1, 0x07, 0x31, 0x03, 0xaa, 0xc9, 0x19, 0x4c, 0x79, 0xe6, 0xa5, 0xe5, 0x07,
-	0x81, 0x55, 0x29, 0x05, 0x72, 0xf1, 0x07, 0x94, 0x26, 0x41, 0xb4, 0x06, 0xa5, 0x16, 0x97, 0xe6,
-	0x94, 0x90, 0x66, 0x80, 0x90, 0x00, 0x17, 0x73, 0x79, 0x66, 0x9e, 0x04, 0x93, 0x02, 0xa3, 0x06,
-	0x47, 0x10, 0x88, 0xe9, 0xa4, 0x17, 0xa5, 0x93, 0x9e, 0x59, 0x92, 0x51, 0x9a, 0xa4, 0x97, 0x9c,
-	0x9f, 0xab, 0x0f, 0xd6, 0x9d, 0x99, 0x0f, 0xa1, 0xe3, 0x8b, 0x53, 0x8b, 0xca, 0x52, 0x8b, 0xf4,
-	0xc1, 0x6e, 0x87, 0xfa, 0x35, 0x89, 0x0d, 0xcc, 0x33, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0xd8,
-	0xbf, 0xde, 0xa7, 0x03, 0x01, 0x00, 0x00,
+	// 249 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x91, 0x41, 0x4b, 0x03, 0x31,
+	0x10, 0x85, 0x59, 0xab, 0xb5, 0x8e, 0x15, 0x25, 0x45, 0x2c, 0xf5, 0x52, 0xf6, 0xd4, 0x83, 0x64,
+	0x41, 0xef, 0x82, 0x82, 0x94, 0xa2, 0x87, 0x35, 0xde, 0xbc, 0x2c, 0xc9, 0x6e, 0xac, 0xc1, 0x76,
+	0x13, 0xb2, 0x33, 0x6a, 0xff, 0xbd, 0x24, 0xa9, 0xde, 0xa5, 0xa7, 0xf7, 0x66, 0x32, 0xef, 0x0b,
+	0xc9, 0xc0, 0xc8, 0x91, 0xea, 0x48, 0x15, 0x49, 0xb8, 0xf3, 0x16, 0x2d, 0x1b, 0x6e, 0xec, 0x87,
+	0x34, 0x55, 0xea, 0x4d, 0xce, 0x65, 0x5d, 0x5b, 0x6a, 0xb1, 0xd8, 0x6a, 0x1a, 0xca, 0x6f, 0x61,
+	0x58, 0x92, 0x7a, 0x41, 0xe9, 0x71, 0x2e, 0x51, 0x33, 0x0e, 0xfb, 0xa6, 0x7d, 0xb3, 0xe3, 0x6c,
+	0x9a, 0xcd, 0x8e, 0xaf, 0x27, 0x3c, 0x31, 0x7e, 0x33, 0x4f, 0x06, 0xf5, 0x5d, 0xf2, 0x22, 0xce,
+	0xe5, 0xcf, 0x70, 0x52, 0x92, 0x0a, 0x51, 0xa1, 0x3b, 0x5a, 0xe1, 0x7f, 0x01, 0xec, 0x0c, 0x7a,
+	0x5f, 0xa6, 0x1d, 0xef, 0x4d, 0xb3, 0xd9, 0x40, 0x04, 0x9b, 0xcf, 0xe1, 0xb4, 0x24, 0xf5, 0xf0,
+	0xed, 0x8c, 0xd7, 0xe5, 0x4a, 0x6e, 0xb4, 0x67, 0x97, 0x70, 0xe4, 0xa2, 0xab, 0x4c, 0x13, 0xc9,
+	0x3d, 0x31, 0x48, 0x8d, 0x45, 0xc3, 0x2e, 0xe0, 0x70, 0x29, 0xd7, 0x3a, 0x1c, 0x05, 0xca, 0x81,
+	0xe8, 0x87, 0x72, 0xd1, 0xe4, 0x8f, 0x30, 0xfa, 0x03, 0x85, 0x8b, 0x77, 0x81, 0xdd, 0xf3, 0xd7,
+	0xab, 0xa5, 0xc1, 0x77, 0x52, 0xbc, 0xb6, 0xeb, 0x22, 0xbe, 0xca, 0xd8, 0xa4, 0x55, 0xa7, 0xfd,
+	0xa7, 0xf6, 0x45, 0xfc, 0xd1, 0xed, 0x0e, 0x54, 0x3f, 0x56, 0x37, 0x3f, 0x01, 0x00, 0x00, 0xff,
+	0xff, 0x5a, 0x9c, 0x90, 0x71, 0x9b, 0x01, 0x00, 0x00,
 }

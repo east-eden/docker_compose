@@ -1,0 +1,201 @@
+version: "3"
+
+
+services:
+  
+  yokai_server_game:
+    image: hellodudu86/yokai_server_game
+    container_name: yokai_server_game
+    command: "-config_file=../../config/game/config.toml"
+    ports:
+      - "7030:7030"
+    volumes:
+      - "./config/game/:/app/config/game"
+      - "./config/entry/:/app/config/entry"
+    environment:
+      MICRO_REGISTRY: "consul"
+      MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"
+      MICRO_BROKER: "nsq"
+      MICRO_BROKER_ADDRESS: "host.docker.internal:4150"
+      DB_DSN: "mongodb://mongo:27017"
+    depends_on:
+      - "consul"
+      - "nsqd"
+      - "loki"
+      - "mongo"
+    #logging:
+      #driver: loki
+      #options:
+        #loki-url: http://host.docker.internal:3100/api/prom/push
+        #loki-retries: "5"
+        #loki-batch-size: "400"
+
+
+  yokai_server_gate:
+    image: hellodudu86/yokai_server_gate
+    container_name: yokai_server_gate
+    command: "-config_file=../../config/gate/config.toml"
+    volumes:
+      - "./config/gate/:/app/config/gate"
+      - "./config/entry/:/app/config/entry"
+    ports:
+      - "8080:8080"
+    environment:
+      MICRO_REGISTRY: "consul"
+      MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"
+      MICRO_BROKER: "nsq"
+      MICRO_BROKER_ADDRESS: "host.docker.internal:4150"
+      MICRO_SYNC_NODE_ADDRESS: "host.docker.internal:8500"
+      DB_DSN: "mongodb://mongo:27017"
+    depends_on:
+      - "consul"
+      - "nsqd"
+      - "loki"
+      - "mongo"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://host.docker.internal:3100/api/prom/push
+        loki-retries: "5"
+        loki-batch-size: "400"
+        
+  mongo:
+    image: mongo
+    container_name: mongo
+    restart: always
+    #environment:
+      #MYSQL_USER: 'root'
+      #MYSQL_ROOT_PASSWORD: "123456"
+    ports:
+      - "27017-27019:27017-27019"
+    volumes:
+      - ./config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./data/database/:/data/db
+    #logging:
+      #driver: loki
+      #options:
+        #loki-url: http://host.docker.internal:3100/api/prom/push
+        #loki-retries: "5"
+        #loki-batch-size: "400"
+
+  consul:
+    image: consul
+    command: "agent -dev -log-level=info -data-dir=/consul_data -ui -client=0.0.0.0"
+    container_name: consul
+    ports:
+      - "8500:8500"
+    volumes:
+      - "./config/consul/:/config/consul/"
+      - "./data/consul/:/consul_data"
+    depends_on:
+      - loki
+    logging:
+      driver: loki
+      options:
+        loki-url: http://host.docker.internal:3100/api/prom/push
+        loki-retries: "5"
+        loki-batch-size: "400"
+
+  nsqlookupd:
+    image: nsqio/nsq
+    command: /nsqlookupd -log-level=info
+    container_name: nsqlookupd
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://host.docker.internal:3100/api/prom/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+    depends_on:
+      - loki
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+
+  nsqd:
+    image: nsqio/nsq
+    command: /nsqd --data-path=/nsq_data -log-level=info -lookupd-tcp-address=nsqlookupd:4160 
+    container_name: nsqd
+    volumes:
+      - "./data/nsq/:/nsq_data"
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://host.docker.internal:3100/api/prom/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+
+    depends_on:
+      - nsqlookupd
+      - nsqadmin
+      - loki
+
+  nsqadmin:
+    image: nsqio/nsq
+    command: /nsqadmin -lookupd-http-address=nsqlookupd:4161
+    container_name: nsqadmin
+    depends_on:
+      - nsqlookupd  
+      - loki
+    ports:
+      - "4171:4171"
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://host.docker.internal:3100/api/prom/push"
+        loki-retries: "5"
+        loki-batch-size: "400"
+
+
+  loki:
+    image: grafana/loki
+    container_name: loki
+    ports:
+      - "3100:3100"
+    volumes:
+      - ./config/loki/:/etc/loki
+      - ./data/loki/:/tmp/loki
+    command: -config.file=/etc/loki/loki-local-config.yaml
+    restart: unless-stopped
+    depends_on:
+      - grafana
+
+  promtail:
+    image: grafana/promtail
+    container_name: promtail
+    volumes:
+      - ./config/promtail/:/etc/promtail
+      - /var/log:/var/log
+    command:
+      -config.file=/etc/promtail/promtail-docker-config.yaml
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    volumes:
+        - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
+        - ./data/grafana/:/var/lib/grafana/
+    ports:
+        - "3000:3000"
+    user: "472"
+    environment:
+      GF_EXPLORE_ENABLED: "true"
+    logging:
+      driver: loki
+      options:
+        loki-url: http://host.docker.internal:3100/api/prom/push
+        loki-retries: "5"
+        loki-batch-size: "400"
+
+  loki_conn:
+    image: hellodudu86/loki_conn
+    container_name: loki_conn
+    command:
+        -url="http://loki:3100/api/prom/push"
+    depends_on:
+        - loki
+
+  

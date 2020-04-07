@@ -3,14 +3,18 @@
 title = "yokai_game_config"
 
 game_id = 1001
-client_connect_max = 5000
-client_timeout = "20s"
-db_dsn = "root:@(127.0.0.1:3306)/db_game"
+account_connect_max = 5000
+
+# ip and port
+public_ip = "127.0.0.1"
 http_listen_addr = ":8080"
 tcp_listen_addr = ":7030"
 
+# db
+db_dsn = "mongodb://localhost:27017"
+database = "db_game"
+
 # game evironment
-micro_registry = "mdns"
-micro_transport = "tcp"
-micro_broker = "http"
-micro_server_id = 1001
+registry = "consul"
+transport = "tcp"
+broker = "nsq"

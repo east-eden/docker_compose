@@ -5,5 +5,7 @@ title = "yokai_client_config"
 client_id = 8001
 client_name = "bot1"
 heart_beat = "5s"
-tcp_server_addr = "hellodudu.co:7030"
 
+gate_endpoints = [
+"http://127.0.0.1:8081/select_game_addr",
+]

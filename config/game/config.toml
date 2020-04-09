@@ -6,7 +6,7 @@ game_id = 1001
 account_connect_max = 5000
 
 # ip and port
-public_ip = "127.0.0.1"
+public_ip = "47.240.56.22"
 http_listen_addr = ":8080"
 tcp_listen_addr = ":7030"
 

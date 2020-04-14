@@ -52,8 +52,11 @@ push:
 
 .PHONY: clean
 clean:
-	mysql -uroot < config/sql/reset_game.sql < config/sql/reset_gate.sql
 	docker rm -f $(shell docker ps -a -q)
+
+.PHONY: clean_image
+clean_image:
+	docker rmi -f $(shell docker images -a -q)
 
 .PHONY: stop
 stop:

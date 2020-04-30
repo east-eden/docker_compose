@@ -10,6 +10,8 @@ services:
     ports:
       - "7030:7030"
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - "./config/game/:/app/config/game"
       - "./config/entry/:/app/config/entry"
     environment:
@@ -36,6 +38,8 @@ services:
     container_name: yokai_server_gate
     command: "-config_file=../../config/gate/config.toml"
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - "./config/gate/:/app/config/gate"
       - "./config/entry/:/app/config/entry"
     ports:
@@ -69,6 +73,8 @@ services:
     ports:
       - "27017-27019:27017-27019"
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - ./config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./data/database/:/data/db
     logging:
@@ -85,6 +91,8 @@ services:
     ports:
       - "8500:8500"
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - "./config/consul/:/config/consul/"
       - "./data/consul/:/consul_data"
     depends_on:
@@ -100,6 +108,9 @@ services:
     image: nsqio/nsq
     command: /nsqlookupd -log-level=info
     container_name: nsqlookupd
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     logging:
       driver: loki
       options:
@@ -117,6 +128,8 @@ services:
     command: /nsqd --data-path=/nsq_data -log-level=info -lookupd-tcp-address=nsqlookupd:4160 
     container_name: nsqd
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - "./data/nsq/:/nsq_data"
     ports:
       - "4150:4150"
@@ -137,6 +150,9 @@ services:
     image: nsqio/nsq
     command: /nsqadmin -lookupd-http-address=nsqlookupd:4161
     container_name: nsqadmin
+    volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
     depends_on:
       - nsqlookupd  
       - loki
@@ -156,6 +172,8 @@ services:
     ports:
       - "3100:3100"
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - ./config/loki/:/etc/loki
       - ./data/loki/:/tmp/loki
     command: -config.file=/etc/loki/loki-local-config.yaml
@@ -167,6 +185,8 @@ services:
     image: grafana/promtail
     container_name: promtail
     volumes:
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
       - ./config/promtail/:/etc/promtail
       - /var/log:/var/log
     command:
@@ -176,8 +196,10 @@ services:
     image: grafana/grafana
     container_name: grafana
     volumes:
-        - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
-        - ./data/grafana/:/var/lib/grafana/
+      - "/etc/timezone:/etc/timezone:ro"
+      - "/etc/localtime:/etc/localtime:ro"
+      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./data/grafana/:/var/lib/grafana/
     ports:
         - "3000:3000"
     user: "472"

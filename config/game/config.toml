@@ -2,7 +2,7 @@
 
 title = "yokai_game_config"
 
-debug = true
+debug = false
 
 game_id = 1001
 account_connect_max = 5000

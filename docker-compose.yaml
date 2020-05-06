@@ -12,6 +12,7 @@ services:
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+      - "./config/cert/:/app/config/cert"
       - "./config/game/:/app/config/game"
       - "./config/entry/:/app/config/entry"
     environment:
@@ -40,6 +41,7 @@ services:
     volumes:
       - "/etc/timezone:/etc/timezone:ro"
       - "/etc/localtime:/etc/localtime:ro"
+      - "./config/cert/:/app/config/cert"
       - "./config/gate/:/app/config/gate"
       - "./config/entry/:/app/config/entry"
     ports:

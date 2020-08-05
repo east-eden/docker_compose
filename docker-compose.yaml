@@ -39,6 +39,7 @@ services:
       - "./config/entry/:/app/config/entry"
     ports:
       - "8080:8080"
+      - "443:443"
     environment:
       MICRO_REGISTRY: "consul"
       MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"

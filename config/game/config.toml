@@ -2,7 +2,8 @@
 
 title = "yokai_game_config"
 
-debug = false
+debug = true
+log_level = "info"
 
 # ip and port
 game_id = 301

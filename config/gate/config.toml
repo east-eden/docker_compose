@@ -2,7 +2,8 @@
 
 title = "yokai_gate_config"
 
-debug = false
+debug = true
+log_level = "info"
 
 # ip and port
 gate_id = 101

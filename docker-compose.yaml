@@ -1,25 +1,21 @@
 version: "3"
 
-
 services:
   
   yokai_server_game:
     image: hellodudu86/yokai_server_game
     container_name: yokai_server_game
-    command: "-config_file=../../config/game/config.toml"
+    command: "-config_file=config/game/config.toml"
     ports:
       - "7030:7030"
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-      - "./config/cert/:/app/config/cert"
       - "./config/game/:/app/config/game"
       - "./config/entry/:/app/config/entry"
     environment:
       MICRO_REGISTRY: "consul"
-      MICRO_REGISTRY_ADDRESS: "consul:8500"
+      MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"
       MICRO_BROKER: "nsq"
-      MICRO_BROKER_ADDRESS: "nsqd:4150"
+      MICRO_BROKER_ADDRESS: "host.docker.internal:4150"
       DB_DSN: "mongodb://mongo:27017"
     depends_on:
       - "consul"
@@ -29,7 +25,7 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: http://47.240.56.22:3100/api/prom/push
+        loki-url: http://host.docker.internal:3100/api/prom/push
         loki-retries: "5"
         loki-batch-size: "400"
 
@@ -37,21 +33,18 @@ services:
   yokai_server_gate:
     image: hellodudu86/yokai_server_gate
     container_name: yokai_server_gate
-    command: "-config_file=../../config/gate/config.toml"
+    command: "-config_file=config/gate/config.toml"
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-      - "./config/cert/:/app/config/cert"
       - "./config/gate/:/app/config/gate"
       - "./config/entry/:/app/config/entry"
     ports:
       - "8080:8080"
     environment:
       MICRO_REGISTRY: "consul"
-      MICRO_REGISTRY_ADDRESS: "consul:8500"
+      MICRO_REGISTRY_ADDRESS: "host.docker.internal:8500"
       MICRO_BROKER: "nsq"
-      MICRO_BROKER_ADDRESS: "nsqd:4150"
-      MICRO_SYNC_NODE_ADDRESS: "consul:8500"
+      MICRO_BROKER_ADDRESS: "host.docker.internal:4150"
+      MICRO_SYNC_NODE_ADDRESS: "host.docker.internal:8500"
       DB_DSN: "mongodb://mongo:27017"
     depends_on:
       - "consul"
@@ -61,7 +54,7 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: http://47.240.56.22:3100/api/prom/push
+        loki-url: http://host.docker.internal:3100/api/prom/push
         loki-retries: "5"
         loki-batch-size: "400"
         
@@ -73,18 +66,33 @@ services:
       #MYSQL_USER: 'root'
       #MYSQL_ROOT_PASSWORD: "123456"
     ports:
-      - "27017-27019:27017-27019"
+      - "27017:27017"
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-      - ./config/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ./config/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
       - ./data/database/:/data/db
     logging:
       driver: loki
       options:
-        loki-url: http://47.240.56.22:3100/api/prom/push
+        loki-url: http://host.docker.internal:3100/api/prom/push
         loki-retries: "5"
         loki-batch-size: "400"
+
+  rejson:
+    image: redislabs/rejson
+    command: 
+      - /usr/local/etc/redis/redis.conf 
+      - --loadmodule /usr/lib/redis/modules/rejson.so
+    container_name: rejson
+    ports:
+      - 6379:6379
+    volumes:
+      - ./config/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./data/redis/:/data
+    healthcheck:
+      test: ["CMD", "redis-cli","ping"]
+      interval: 20s
+      timeout: 1s
+      retries: 20
 
   consul:
     image: consul
@@ -93,8 +101,6 @@ services:
     ports:
       - "8500:8500"
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
       - "./config/consul/:/config/consul/"
       - "./data/consul/:/consul_data"
     depends_on:
@@ -102,7 +108,7 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: http://47.240.56.22:3100/api/prom/push
+        loki-url: http://host.docker.internal:3100/api/prom/push
         loki-retries: "5"
         loki-batch-size: "400"
 
@@ -110,13 +116,10 @@ services:
     image: nsqio/nsq
     command: /nsqlookupd -log-level=info
     container_name: nsqlookupd
-    volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
     logging:
       driver: loki
       options:
-        loki-url: "http://47.240.56.22:3100/api/prom/push"
+        loki-url: "http://host.docker.internal:3100/api/prom/push"
         loki-retries: "5"
         loki-batch-size: "400"
     depends_on:
@@ -130,8 +133,6 @@ services:
     command: /nsqd --data-path=/nsq_data -log-level=info -lookupd-tcp-address=nsqlookupd:4160 
     container_name: nsqd
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
       - "./data/nsq/:/nsq_data"
     ports:
       - "4150:4150"
@@ -139,7 +140,7 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: "http://47.240.56.22:3100/api/prom/push"
+        loki-url: "http://host.docker.internal:3100/api/prom/push"
         loki-retries: "5"
         loki-batch-size: "400"
 
@@ -152,9 +153,6 @@ services:
     image: nsqio/nsq
     command: /nsqadmin -lookupd-http-address=nsqlookupd:4161
     container_name: nsqadmin
-    volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
     depends_on:
       - nsqlookupd  
       - loki
@@ -163,19 +161,17 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: "http://47.240.56.22:3100/api/prom/push"
+        loki-url: "http://host.docker.internal:3100/api/prom/push"
         loki-retries: "5"
         loki-batch-size: "400"
 
 
   loki:
-    image: grafana/loki
+    image: grafana/loki:v1.3.0
     container_name: loki
     ports:
       - "3100:3100"
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
       - ./config/loki/:/etc/loki
       - ./data/loki/:/tmp/loki
     command: -config.file=/etc/loki/loki-local-config.yaml
@@ -187,8 +183,6 @@ services:
     image: grafana/promtail
     container_name: promtail
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
       - ./config/promtail/:/etc/promtail
       - /var/log:/var/log
     command:
@@ -198,10 +192,8 @@ services:
     image: grafana/grafana
     container_name: grafana
     volumes:
-      - "/etc/timezone:/etc/timezone:ro"
-      - "/etc/localtime:/etc/localtime:ro"
-      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./data/grafana/:/var/lib/grafana/
+        - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
+        - ./data/grafana/:/var/lib/grafana/
     ports:
         - "3000:3000"
     user: "472"
@@ -210,16 +202,27 @@ services:
     logging:
       driver: loki
       options:
-        loki-url: http://47.240.56.22:3100/api/prom/push
+        loki-url: http://host.docker.internal:3100/api/prom/push
         loki-retries: "5"
         loki-batch-size: "400"
 
-  #loki_conn:
-    #image: hellodudu86/loki_conn
-    #container_name: loki_conn
-    #command:
-        #-url="http://loki:3100/api/prom/push"
-    #depends_on:
-        #- loki
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+        - "9090:9090"
+    command:
+        - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+        - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+        - ./data/prometheus:/prometheus
 
-  
+  node-exporter:
+    image: quay.io/prometheus/node-exporter
+    container_name: node-exporter
+    hostname: "gate no1"
+    restart: always
+    ports:
+        - "9100:9100"
+
+    

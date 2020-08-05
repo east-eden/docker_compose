@@ -1,14 +1,12 @@
 # config.toml
 
-title = "yokai_gate_config"
+title = "yokai_combat_config"
 
 debug = true
 
 # ip and port
-gate_id = 101
-https_listen_addr = ":443"
-http_listen_addr = ":80"
-default_game_id = "301"
+combat_id = 201
+https_listen_addr = ":447"
 
 # tls config
 cert_path_debug = "config/cert/localhost.crt"
@@ -19,10 +17,9 @@ key_path_release = "config/cert/hellodudu.key"
 
 # db
 db_dsn = "mongodb://localhost:27017"
-database = "db_gate"
-redis_addr = "localhost:6379"
+database = "db_combat"
 
-# gate evironment
+# game evironment
 registry_debug = "mdns"
 broker_debug = "http"
 
